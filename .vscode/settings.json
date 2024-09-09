@@ -1,0 +1,32 @@
+{
+  "java.compile.nullAnalysis.mode": "disabled",
+  "sqltools.connections": [
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5432,
+      "driver": "PostgreSQL",
+      "name": "product-db",
+      "username": "postgres",
+      "database": "product-db"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5433,
+      "driver": "PostgreSQL",
+      "name": "payment-db",
+      "username": "postgres",
+      "database": "payment-db"
+    },
+    {
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 5434,
+      "driver": "PostgreSQL",
+      "name": "inventory-db",
+      "database": "inventory-db",
+      "username": "postgres"
+    }
+  ]
+}
