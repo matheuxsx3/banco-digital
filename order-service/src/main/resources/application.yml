@@ -2,16 +2,14 @@ server:
   port: 3000
 
 spring:
-  
   kafka:
     bootstrap-servers: ${KAFKA_BROKER:localhost:9092}
-    topic:
-        start-saga: start-saga
-        notify-ending: notify-ending
     consumer:
       group-id: order-group
       auto-offset-reset: latest
-      
+    properties:
+      topic.start-saga: start-saga
+      topic.notify-ending: notify-ending
   
   data:
     mongodb:

@@ -3,6 +3,7 @@ package br.com.microservices.orchestrated.inventoryservice.config.kafka;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
@@ -10,6 +11,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
@@ -24,6 +26,9 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
+    private static final Integer REPLICA_COUNT = 1;
+    private static final Integer PARTITION_COUNT = 1;
+
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
     
@@ -32,6 +37,15 @@ public class KafkaConfig {
 
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
+
+    @Value("${spring.kafka.properties.orchestrator}")
+    private String orchestratorTopic;
+
+    @Value("${spring.kafka.properties.inventory-success}")
+    private String inventorySuccessTopic;
+
+    @Value("${spring.kafka.properties.inventory-fail}")
+    private String inventoryFailTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -50,11 +64,6 @@ public class KafkaConfig {
     }
 
     @Bean
-    public ProducerFactory<String, String> producerFactory() {
-        return null;
-    }
-
-    @Bean
     public Map<String, Object> producerProps() {
         Map<String, Object> props = new HashMap<>();
         props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, bootstrapServers);
@@ -65,6 +74,29 @@ public class KafkaConfig {
 
     @Bean
     public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) {
-        return new KafkaTemplate<>(producerFactory());
+        return new KafkaTemplate<>(producerFactory);
     }
+        private NewTopic buildTopic(String topicName) {
+        return TopicBuilder
+                .name(topicName)
+                .replicas(REPLICA_COUNT)
+                .partitions(PARTITION_COUNT)
+                .build();
+    }
+
+    @Bean
+    public NewTopic orchestratorTopic() {
+        return buildTopic(orchestratorTopic);
+    }
+
+    @Bean
+    public NewTopic inventorySuccessTopic() {
+        return buildTopic(inventorySuccessTopic);
+    }
+
+    @Bean
+    public NewTopic inventoryFailTopic() {
+        return buildTopic(inventoryFailTopic);
+    }
+
 }

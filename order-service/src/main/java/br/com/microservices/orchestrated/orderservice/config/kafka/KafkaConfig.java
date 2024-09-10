@@ -3,20 +3,21 @@ package br.com.microservices.orchestrated.orderservice.config.kafka;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.kafka.clients.admin.NewTopic;
 import org.apache.kafka.clients.consumer.ConsumerConfig;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.StringDeserializer;
+import org.apache.kafka.common.serialization.StringSerializer;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.kafka.annotation.EnableKafka;
+import org.springframework.kafka.config.TopicBuilder;
 import org.springframework.kafka.core.ConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaConsumerFactory;
 import org.springframework.kafka.core.DefaultKafkaProducerFactory;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.kafka.core.ProducerFactory;
-
-import com.fasterxml.jackson.databind.ser.std.StringSerializer;
 
 import lombok.RequiredArgsConstructor;
 
@@ -25,14 +26,23 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class KafkaConfig {
 
+    private static final Integer REPLICA_COUNT = 1;
+    private static final Integer PARTITION_COUNT = 1;
+
     @Value("${spring.kafka.bootstrap-servers}")
     private String bootstrapServers;
-    
+
     @Value("${spring.kafka.consumer.group-id}")
     private String groupId;
 
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
+
+    @Value("${spring.kafka.properties.topic.start-saga}")
+    private String startSagaTopic;
+
+    @Value("${spring.kafka.properties.topic.notify-ending}")
+    private String notifyEndingTopic;
 
     @Bean
     public ConsumerFactory<String, String> consumerFactory() {
@@ -68,4 +78,23 @@ public class KafkaConfig {
     public KafkaTemplate<String, String> kafkaTemplate(ProducerFactory<String, String> producerFactory) {
         return new KafkaTemplate<>(producerFactory());
     }
+
+    private NewTopic buildTopic(String topicName) {
+        return TopicBuilder
+                .name(topicName)
+                .replicas(REPLICA_COUNT)
+                .partitions(PARTITION_COUNT)
+                .build();
+    }
+
+    @Bean
+    public NewTopic startSagaTopic() {
+        return buildTopic(startSagaTopic);
+    }
+
+    @Bean
+    public NewTopic notifyEndingTopic() {
+        return buildTopic(notifyEndingTopic);
+    }
+
 }
