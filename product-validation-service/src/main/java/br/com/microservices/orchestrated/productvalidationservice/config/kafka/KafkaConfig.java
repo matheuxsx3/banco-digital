@@ -39,13 +39,13 @@ public class KafkaConfig {
     private String autoOffsetReset;
 
 
-    @Value("${spring.kafka.properties.orchestrator}")
+    @Value("${spring.kafka.properties.topic.orchestrator}")
     private String orchestratorTopic;
 
-    @Value("${spring.kafka.properties.product-validation-success}")
+    @Value("${spring.kafka.properties.topic.product-validation-success}")
     private String productValidationSuccessTopic;
 
-    @Value("${spring.kafka.properties.product-validation-fail}")
+    @Value("${spring.kafka.properties.topic.product-validation-fail}")
     private String productValidationFailTopic;
 
     @Bean

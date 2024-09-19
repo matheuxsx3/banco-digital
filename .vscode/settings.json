@@ -28,5 +28,8 @@
       "database": "inventory-db",
       "username": "postgres"
     }
-  ]
+  ],
+  "java.dependency.packagePresentation": "hierarchical",
+  "java.dependency.syncWithFolderExplorer": true,
+  "java.project.explorer.showNonJavaResources": true
 }

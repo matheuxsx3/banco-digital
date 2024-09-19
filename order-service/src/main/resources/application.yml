@@ -8,13 +8,14 @@ spring:
       group-id: order-group
       auto-offset-reset: latest
     properties:
-      topic.start-saga: start-saga
-      topic.notify-ending: notify-ending
-  
+      topic:
+        start-saga: start-saga
+        notify-ending: notify-ending
+
   data:
     mongodb:
-      database: ${MONGO_DB:order-db}
-      uri: mongodb://${MONGO_HOST:order-db}:${MONGO_PORT:27017}/${MONGO_DB:order-db}
+      database: admin
+      uri: ${MONGO_DB_URI:mongodb://root:root@localhost:27017}
 
 logging:
   level:

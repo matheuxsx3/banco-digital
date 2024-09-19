@@ -38,13 +38,13 @@ public class KafkaConfig {
     @Value("${spring.kafka.consumer.auto-offset-reset}")
     private String autoOffsetReset;
 
-    @Value("${spring.kafka.properties.orchestrator}")
+    @Value("${spring.kafka.properties.topic.orchestrator}")
     private String orchestratorTopic;
 
-    @Value("${spring.kafka.properties.inventory-success}")
+    @Value("${spring.kafka.properties.topic.inventory-success}")
     private String inventorySuccessTopic;
 
-    @Value("${spring.kafka.properties.inventory-fail}")
+    @Value("${spring.kafka.properties.topic.inventory-fail}")
     private String inventoryFailTopic;
 
     @Bean
